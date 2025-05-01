@@ -9,7 +9,4 @@ export class CreateCardDto {
 
   @IsNumber()
   valor: number;
-
-  @IsUUID()
-  userId: string;
 }

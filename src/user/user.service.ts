@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
+  update(id: string, arg1: { password: string; }) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -18,5 +21,11 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findOne({ where: { email } });
+  }
+  async findById(id: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { id } });
+  }
+  async updatePassword(id: string, password: string): Promise<void> {
+    await this.userRepository.update(id, { password });
   }
 }

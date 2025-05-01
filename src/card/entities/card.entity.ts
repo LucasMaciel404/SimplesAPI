@@ -6,13 +6,13 @@ export class Card {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   nome: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   data: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true})
   valor: number;
 
   @ManyToOne(() => User, (user) => user.cards)

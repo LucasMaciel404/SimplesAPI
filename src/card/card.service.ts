@@ -6,6 +6,7 @@ import { Card } from './entities/card.entity';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { User } from 'src/user/entities/user.entity';
+import { JwtPayload } from 'src/auth/jwt/dto/jwt.dto';
 
 @Injectable()
 export class CardService {
@@ -18,8 +19,8 @@ export class CardService {
   ) {}
 
   // Método para criar um card
-  async create(dto: CreateCardDto): Promise<Card> {
-    const user = await this.userRepository.findOneBy({ id: dto.userId });
+  async create(dto: CreateCardDto, user_id: string): Promise<Card> {
+    const user = await this.userRepository.findOneBy({ id: user_id });
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
     //removendo o password do user
@@ -34,8 +35,16 @@ export class CardService {
   }
 
   // Método para obter todos os cards
-  findAll(): Promise<Card[]> {
-    return this.cardRepository.find({ relations: ['user'] });
+  async findAll(id : string): Promise<{cards: Card[], name: string}> {
+    const cardsPromise =  this.cardRepository.find({ where: { user: { id } } });
+    const usuarioPromise =  this.userRepository.findOneBy({ id: id })
+    
+    const [cards, usuario] = await Promise.all([cardsPromise, usuarioPromise]);
+    
+    if (!cards) throw new NotFoundException('Cards não encontrados');
+    if (!usuario) throw new NotFoundException('Usuário não encontrado');
+
+    return {cards: cards, name: usuario.name};
   }
 
   // Método para buscar um card específico
@@ -48,23 +57,14 @@ export class CardService {
     return card;
   }
 
-  async findAllByUserId(id: string): Promise<Card[]> {
-    const card = await this.cardRepository.find({
-      where: { user: { id } },
-      relations: ['user'],
-    });
-    if (!card) throw new NotFoundException('User Id não encontrado');
-    return card;
-  }
-
   // Método para atualizar um card
-  async update(id: string, dto: UpdateCardDto): Promise<Card> {
-    const card = await this.findOne(id);
+  async update(card_id: string, dto: UpdateCardDto, user: JwtPayload): Promise<Card> {
+    const card = await this.findOne(card_id);
 
-    if (dto.userId) {
-      const user = await this.userRepository.findOneBy({ id: dto.userId });
-      if (!user) throw new NotFoundException('Usuário não encontrado');
-      card.user = user;
+    if (user.id) {
+      const usuario = await this.userRepository.findOneBy({ id: user.id });
+      if (!usuario) throw new NotFoundException('Usuário não encontrado');
+      card.user = usuario;
     }
 
     Object.assign(card, dto);
@@ -72,23 +72,12 @@ export class CardService {
   }
 
   // Método para remover um card
-  async remove(id: string): Promise<void> {
+  async remove(id: string, user_id: string): Promise<void> {
     const card = await this.findOne(id);
-    await this.cardRepository.remove(card);
-  }
 
-  // Nova função para buscar todos os cards de um usuário específico
-  async findByUserId(userId: string): Promise<Card[]> {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+    const usuario = await this.userRepository.findOneBy({ id: user_id });
+    if (!usuario) throw new NotFoundException('Usuário não encontrado');
 
-    //removendo o password do user
-    delete (user as Partial<User>).password;
-    
-    // Buscando todos os cards associados ao usuário
-    return this.cardRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user'],
-    });
+    if(user_id == usuario.id )await this.cardRepository.remove(card);
   }
 }
