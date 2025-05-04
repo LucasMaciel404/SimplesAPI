@@ -5,16 +5,25 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from '../mail/mail.module'; // 👈 importa aqui
 
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt/jwt.strategy';
+
 @Module({
   imports: [
-    UserModule,
-    MailModule, // 👈 não esquece disso
-    JwtModule.register({
-      secret: 'suaChaveSecreta', // ou use dotenv aqui
-      signOptions: { expiresIn: '1d' },
+    ConfigModule, // 👈 importante se usa configService
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
     }),
+    UserModule,
+    MailModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}
+
