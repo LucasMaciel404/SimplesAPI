@@ -10,3 +10,5 @@ async function bootstrap() {
   await app.listen(3000, '0.0.0.0');
 }
 bootstrap();
+
+// dia para buscar um novo banco de dados gratuito
