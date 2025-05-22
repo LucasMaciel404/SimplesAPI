@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/guard/jwt-auth.guard';
 import { User } from 'src/user/user.decorator';
 import { JwtPayload } from 'src/auth/jwt/dto/jwt.dto';
 
-@UseGuards(JwtAuthGuard) // protege todas as rotas
+@UseGuards(JwtAuthGuard) 
 @Controller('cards')
 export class CardController {
   constructor(private readonly cardService: CardService) {}
