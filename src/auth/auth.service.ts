@@ -42,7 +42,7 @@ export class AuthService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    const newPassword = Math.random().toString(36).slice(-8); // senha aleatória
+    const newPassword = Math.random().toString(36).slice(-8); 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await this.userService.updatePassword(user.id, hashedPassword);

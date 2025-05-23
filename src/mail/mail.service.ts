@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from "@nestjs/common";
+import * as nodemailer from "nodemailer";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class MailService {
@@ -9,16 +9,16 @@ export class MailService {
 
   constructor(private configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('MAIL_HOST'),
-      port: this.configService.get<number>('MAIL_PORT'),
+      host: this.configService.get<string>("MAIL_HOST"),
+      port: this.configService.get<number>("MAIL_PORT"),
       secure: false,
       auth: {
-        user: this.configService.get<string>('MAIL_USER'),
-        pass: this.configService.get<string>('MAIL_PASS'),
+        user: this.configService.get<string>("MAIL_USER"),
+        pass: this.configService.get<string>("MAIL_PASS"),
       },
     });
 
-    this.from = this.configService.get<string>('MAIL_FROM');
+    this.from = this.configService.get<string>("MAIL_FROM");
   }
 
   async sendMail({

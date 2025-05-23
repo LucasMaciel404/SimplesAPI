@@ -1,7 +1,7 @@
 import { IsString, IsEmail, IsOptional, IsInt, IsBoolean, MinLength, MaxLength } from 'class-validator';
 
 export class UpdateUserDto {
-  @IsOptional()  // O nome pode ser opcional em um update
+  @IsOptional()  
   @IsString()
   @MinLength(2)
   @MaxLength(100)
@@ -14,7 +14,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(6)  // Exigindo que a senha tenha pelo menos 6 caracteres, se fornecida
+  @MinLength(6)  
   password?: string;
 
   @IsOptional()
@@ -27,5 +27,5 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean;  // Caso não seja enviado, o valor padrão será 'true'
+  isActive?: boolean;  
 }

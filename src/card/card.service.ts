@@ -45,7 +45,6 @@ export class CardService {
     return { cards: cards, name: usuario.name };
   }
 
-  // Método para buscar um card específico (com verificação de dono)
   async findOne(id: string, user_id?: string): Promise<Card> {
     const card = await this.cardRepository.findOne({
       where: { id },
@@ -60,17 +59,15 @@ export class CardService {
     return card;
   }
 
-  // Método para atualizar um card
   async update(card_id: string, dto: UpdateCardDto, user: JwtPayload): Promise<Card> {
-    const card = await this.findOne(card_id, user.id); // garante que o card pertence ao user
+    const card = await this.findOne(card_id, user.id); 
 
     Object.assign(card, dto);
     return this.cardRepository.save(card);
   }
 
-  // Método para remover um card
   async remove(id: string, user_id: string): Promise<void> {
-    const card = await this.findOne(id, user_id); // garante que o card pertence ao user
+    const card = await this.findOne(id, user_id); 
     await this.cardRepository.remove(card);
   }
 }

@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
         ConfigModule.forRoot({
-      isGlobal: true, // Deixa disponível para toda a aplicação
+      isGlobal: true,
     }),
     DatabaseModule,
     UserModule,

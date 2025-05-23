@@ -12,7 +12,7 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @MinLength(6)  // Exemplo de exigência de mínimo de 6 caracteres para a senha
+  @MinLength(6)
   password: string;
 
   @IsOptional()
@@ -25,5 +25,5 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean;  // Caso não seja enviado, o valor padrão será 'true'
+  isActive?: boolean;
 }
