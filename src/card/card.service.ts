@@ -17,7 +17,6 @@ export class CardService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  // Método para criar um card
   async create(dto: CreateCardDto, user_id: string): Promise<Card> {
     const user = await this.userRepository.findOneBy({ id: user_id });
     if (!user) throw new NotFoundException('Usuário não encontrado');
@@ -32,7 +31,6 @@ export class CardService {
     return this.cardRepository.save(card);
   }
 
-  // Método para obter todos os cards
   async findAll(id: string): Promise<{ cards: Card[]; name: string }> {
     const cardsPromise = this.cardRepository.find({ where: { user: { id } } });
     const usuarioPromise = this.userRepository.findOneBy({ id: id });
